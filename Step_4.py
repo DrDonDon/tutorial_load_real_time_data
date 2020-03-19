@@ -19,7 +19,7 @@ token_request = a10a.TokenRequest(username=os.getenv('username'), password=os.ge
 amphora_api = a10a.AmphoraeApi(a10a.ApiClient(configuration))
 
 # Define model function
-def time_product(date_time)
+def time_product(date_time):
   time_hour = date_time.hour
   time_minute = date_time.minute
   time_second = date_time.second
@@ -50,6 +50,11 @@ dto = a10a.CreateAmphora(name = amphora_name, lat = amphora_lat, lon = amphora_l
                          price = amphora_price, description = amphora_description, 
                          terms_and_conditions_id = amphora_tnc, labels = amphora_labels)
 res = amphora_api.amphorae_create(create_amphora=dto)
+
+# Save Amphora ID for later
+File_object = open("Amphora_id.txt","w") 
+File_object.write(res.id)
+File_object.close()
 
 # Now create signal 
 yourSignal=a10a.Signal(_property = "timeProduct", value_type = "Numeric", 
