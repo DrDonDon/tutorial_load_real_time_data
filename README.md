@@ -1,4 +1,4 @@
-# Tutorial load real time data
+# Tutorial to load real time data into Amphora Data
 Step by step guide to set up real time loading of data to amphoradata.com
 
 You can access this repo at [TBD]
