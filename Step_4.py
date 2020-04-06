@@ -12,13 +12,9 @@ from datetime import datetime, timedelta
 
 
 # Login to amphoradata.com
-configuration = Configuration()
-configuration.host = "https://app.amphoradata.com"
-auth_api = a10a.AuthenticationApi(a10a.ApiClient(configuration))
-token_request = a10a.TokenRequest(username=os.getenv('username'), password=os.getenv('password'))
-res = auth_api.authentication_request_token(token_request = token_request )
-configuration.api_key["Authorization"] = "Bearer " + res
-amphora_api = a10a.AmphoraeApi(a10a.ApiClient(configuration))
+credentials = Credentials(username=os.getenv('username'), password=os.getenv('password'))
+client = AmphoraDataRepositoryClient(credentials)
+amphora_api = a10a.AmphoraeApi(client.apiClient)
 
 # Define model function
 def time_product(date_time):
@@ -42,28 +38,25 @@ sep=" "
 amphora_description = "This is an Amphora for a tutorial on how to make Amphoras"
 amphora_tnc = "Creative_Commons_4p0"
 amphora_name = "Tutorial: How to make and upload an Amphora"
-amphora_labels = "tutorial,timeseries"
+amphora_labels = ["tutorial,timeseries"]
 amphora_price = 10   # Monthly price of Amphora
 amphora_lat = -27.45714
 amphora_lon = 153.07106
 
 ## Create an Amphora 
-dto = a10a.CreateAmphora(name = amphora_name, lat = amphora_lat, lon = amphora_lon, 
+amphora = client.create_amphora(name = amphora_name, lat = amphora_lat, lon = amphora_lon, 
                          price = amphora_price, description = amphora_description, 
                          terms_and_conditions_id = amphora_tnc, labels = amphora_labels)
-new_amphora = amphora_api.amphorae_create(create_amphora=dto)
 
 # Save Amphora ID for later
 File_object = open("Amphora_id.txt","w") 
-File_object.write(new_amphora.id)
+File_object.write(amphora.amphora_id)
 File_object.close()
 
 # Now create signal 
-yourSignal=a10a.Signal(_property = "timeProduct", value_type = "Numeric", 
-                       attributes = {"units": "HMS"})
-amphora_api.amphorae_signals_create_signal(new_amphora.id, signal = yourSignal)
+amphora.create_signal("timeProduct",attributes = {"units": "HMS"})
 signalStore=[]
 signalStore.append({"t": time_now, "timeProduct": time_prod})
 
 # Push signal
-amphora_api.amphorae_signals_upload_signal_batch(new_amphora.id, signalStore)
+amphora.push_signals_dict_array(Signals) 
