@@ -39,7 +39,7 @@ amphora_description = "This is an Amphora for a tutorial on how to make Amphoras
 amphora_tnc = "Creative_Commons_4p0"
 amphora_name = "Tutorial: How to make and upload an Amphora"
 amphora_labels = ["tutorial,timeseries"]
-amphora_price = 10   # Monthly price of Amphora
+amphora_price = 0   # Monthly price of Amphora
 amphora_lat = -27.45714
 amphora_lon = 153.07106
 
