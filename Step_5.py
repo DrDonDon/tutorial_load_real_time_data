@@ -12,13 +12,9 @@ from datetime import datetime, timedelta
 
 
 # Login to amphoradata.com
-configuration = Configuration()
-configuration.host = "https://app.amphoradata.com"
-auth_api = a10a.AuthenticationApi(a10a.ApiClient(configuration))
-token_request = a10a.TokenRequest(username=os.getenv('username'), password=os.getenv('password'))
-res = auth_api.authentication_request_token(token_request = token_request )
-configuration.api_key["Authorization"] = "Bearer " + res
-amphora_api = a10a.AmphoraeApi(a10a.ApiClient(configuration))
+credentials = Credentials(username=os.getenv('username'), password=os.getenv('password'))
+client = AmphoraDataRepositoryClient(credentials)
+amphora_api = a10a.AmphoraeApi(client.apiClient)
 
 # Get existing Amphora ID
 File_object = open("Amphora_id.txt","r") 
@@ -47,4 +43,5 @@ signalStore=[]
 signalStore.append({"t": time_now, "timeProduct": time_prod})
 
 # Push signal
-amphora_api.amphorae_signals_upload_signal_batch(Amphora_id, signalStore)
+amphora = client.get_amphora(Amphora_id)
+amphora.push_signals_dict_array(signalStore)
