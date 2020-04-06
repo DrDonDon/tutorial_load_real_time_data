@@ -1,7 +1,8 @@
 # Import Amphora librarys
-import amphora_client as a10a
-from amphora_client.configuration import Configuration
-from amphora_extensions.file_uploader import FileUploader
+from amphora.client import AmphoraDataRepositoryClient, Credentials
+import amphora_api_client as a10a
+from amphora_api_client.rest import ApiException
+from amphora_api_client.configuration import Configuration
 
 # Import non-Amphora librarys
 from array import array 
